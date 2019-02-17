@@ -48,11 +48,10 @@ module memtest(
 
 	(* mark_debug = "true" *) reg [4:0] state;
 	(* mark_debug = "true" *) reg err;
-	(* mark_debug = "true" *) wire [63:0] rdata;
-	(* mark_debug = "true" *) reg [63:0] data;
+	(* mark_debug = "true" *) reg [511:0] rdata;
+	(* mark_debug = "true" *) reg [511:0] data;
 	(* mark_debug = "true" *) reg [30:0] addr;
 
-	assign rdata = s_axi_rdata[63:0];
 
 	always @(posedge clk) begin
 		if (~rstn) begin
@@ -60,6 +59,7 @@ module memtest(
 			err <= 0;
 			data <= 64'h1;
 			addr <= 0;
+			rdata <= 0;
 
 			s_axi_araddr <= 0;
 			s_axi_arburst <= 2'b01; // INCR
@@ -85,13 +85,13 @@ module memtest(
 			s_axi_rready <= 0;
 			s_axi_wdata <= 0;
 			s_axi_wlast <= 0;
-			s_axi_wstrb <= {{56{1'b0}} ,{8{1'b1}}}; // 64bit enable
+			s_axi_wstrb <= {64{1'b1}}; // 64bit enable
 			s_axi_wvalid <= 0;
 		// write
 		end else if (state == 0) begin
 			s_axi_awvalid <= 1;
 			s_axi_awaddr <= addr;
-			data <= data + 1;
+			data <= data + 32'h10000000;
 			state <= 1;
 		end else if (state == 1) begin
 			if(s_axi_awready) begin
@@ -132,6 +132,7 @@ module memtest(
 		end else if (state == 9) begin
 			if(s_axi_rvalid) begin
 				err = err | s_axi_rresp[1];
+				rdata <= s_axi_rdata;
 				if(s_axi_rlast) begin
 					s_axi_rready <= 0;
 					addr <= addr + 8;
