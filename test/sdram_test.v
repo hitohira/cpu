@@ -84,13 +84,13 @@ module sdram_test(
 			m_axi_awvalid <= 1;
 			state <= 5;	
 		end else if (state == 5) begin
-				if(m_axi_awready) begin
-					m_axi_awvalid <= 0;
-					m_axi_wdata <= data2;
-					m_axi_wstrb <= 4'b1111;
-					m_axi_wvalid <= 1;
-					state <= 6;
-				end
+			if(m_axi_awready) begin
+				m_axi_awvalid <= 0;
+				m_axi_wdata <= data2;
+				m_axi_wstrb <= 4'b1111;
+				m_axi_wvalid <= 1;
+				state <= 6;
+			end
 		end else if (state == 7) begin
 			if (m_axi_wready) begin
 				m_axi_wvalid <= 0;
@@ -154,6 +154,7 @@ module sdram_test(
 				m_axi_arvalid <= 0;
 				m_axi_rready <= 1;
 				state <= 18;
+			end
 		end else if (state == 18) begin
 			if(m_axi_rvalid) begin
 				m_axi_rready <= 0;
@@ -179,6 +180,7 @@ module sdram_test(
 					led[5] <= 1;
 				end
 				state <= 22;
+			end
 		end else if (state == 22) begin
 			led[7] <= 1;
 		end
