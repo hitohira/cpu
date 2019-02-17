@@ -24,7 +24,7 @@ module sdram_test(
 	output reg [3:0] m_axi_wstrb,
 	output reg m_axi_wvalid,
 
-	output reg led
+	output reg [7:0] led
 	);
 
 
